@@ -87,11 +87,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(MetaProject.coroLibrary) {
-                    version {
-                        strictly(MetaProject.coroVersion)
-                    }
-                }
+                implementation("org.angproj.io.buf:angelos-project-buffer:1.0.0-beta.2")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
             }
         }
         val commonTest by getting {
@@ -99,12 +96,12 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        val jvmMain by getting
+        /*val jvmMain by getting
         val jvmTest by getting
         val jsMain by getting
         val jsTest by getting
         val nativeMain by getting
-        val nativeTest by getting
+        val nativeTest by getting*/
     }
 }
 
