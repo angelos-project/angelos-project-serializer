@@ -88,7 +88,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.angproj.io.buf:angelos-project-buffer:1.0.0-beta.2")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3")
             }
         }
         val commonTest by getting {

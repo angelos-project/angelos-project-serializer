@@ -12,13 +12,12 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-package org.angproj.io.serializer
+package org.angproj.io.pipe
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
-
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
-
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
+/**
+ * Transaction is a standard interface for defining transactions that can be rolled back at failure.
+ *
+ * @constructor Create empty Transaction
+ */
+interface Transaction {
 }

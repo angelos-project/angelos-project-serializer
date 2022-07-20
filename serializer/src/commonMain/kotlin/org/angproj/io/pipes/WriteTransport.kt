@@ -12,13 +12,22 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-package org.angproj.io.serializer
+package org.angproj.io.pipes
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
+interface WriteTransport : BaseTransport {
+    fun setWriteBufferLimits(high: UInt, low: UInt)
 
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
+    fun getWriteBufferSize(): Int
 
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
+    fun getWriteBufferLimits(): Pair<UInt, UInt>
+
+    fun write(data: ByteArray)
+
+    fun writeLines(listOfData: List<Line>)
+
+    fun writeEof()
+
+    fun canWriteEof(): Boolean
+
+    fun abort()
 }

@@ -14,11 +14,7 @@
  */
 package org.angproj.io.serializer
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
-
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
-
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
+interface ByteArrayCodec {
+    val array: ByteArray
+    var index: Int
 }

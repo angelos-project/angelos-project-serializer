@@ -12,13 +12,19 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-package org.angproj.io.serializer
+package org.angproj.io.fs
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
+import org.angproj.io.pipe.*
 
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
+class BlockDevice(entryPoint: File, entryShared: IntermittentTransformer) : AbstractDevice(entryPoint, entryShared) {
 
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
+    override fun doTell(): Long = Internals.tellFile(entryShared.descriptor)
+
+    override fun doSeek(position: Long, whence: Seek): Long {
+
+    }
+
+    override fun doTruncate(position: Long): Long {
+
+    }
 }

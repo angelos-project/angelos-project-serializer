@@ -12,13 +12,12 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-package org.angproj.io.serializer
+package org.angproj.io.pipes
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
+interface Protocol : BaseProtocol {
+    fun dataReceived(data: ByteArray)
 
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
-
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
+    fun eofReceived(): Boolean
 }
+
+// https://github.com/python/cpython/blob/3.10/Lib/asyncio/protocols.py

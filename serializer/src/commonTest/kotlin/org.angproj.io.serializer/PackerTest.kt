@@ -14,11 +14,30 @@
  */
 package org.angproj.io.serializer
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
+import kotlinx.serialization.Serializable
+import kotlin.test.Test
 
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
+@Serializable
+enum class Sex(val type: Byte) {
+    MAN(1),
+    WOMAN(2),
+    EUNUCH(-1)
+}
 
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
+@Serializable
+data class Person(val name: String, val sex: Sex, val age: Int) {
+}
+
+class PackerTest {
+
+    @Test
+    fun encodeToByteBuffer() {
+        //val entity = Person("John Roe", Sex.MAN, 74)
+        //val data = Packer.encodeToByteArray(entity)
+    }
+
+    @Test
+    fun decodeFromByteBuffer() {
+
+    }
 }

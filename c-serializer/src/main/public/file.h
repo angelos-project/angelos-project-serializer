@@ -12,13 +12,29 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-package org.angproj.io.serializer
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
+#ifndef SRC_FILE_H
+#define SRC_FILE_H
 
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
 
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
-}
+extern long fs_fopen(const char *path, const char *mode);
+
+
+extern int fs_fclose(long fp);
+
+
+extern long fs_fread(long buffer, int count, long fp);
+
+
+extern long fs_fwrite(long buffer, int count, long fp);
+
+
+extern long fs_fseek(long fp, long offset, int whence);
+
+
+extern long fs_ftell(long fp);
+
+
+extern long fs_ftruncate(long fp, long length);
+
+#endif //SRC_FILE_H

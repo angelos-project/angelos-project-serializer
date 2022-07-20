@@ -12,13 +12,16 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-package org.angproj.io.serializer
+package org.angproj.io.pipes
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
+interface SubprocessTransport : BaseTransport {
+    fun getPid(): Int
 
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
+    fun getReturnCode(): Int
 
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
+    fun getPipeTransport(fd: Int): BaseTransport
+
+    fun terminate()
+
+    fun kill()
 }

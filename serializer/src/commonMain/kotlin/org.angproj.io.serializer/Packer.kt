@@ -20,25 +20,40 @@ import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import org.angproj.io.buf.Buffer
 import org.angproj.io.buf.MutableBuffer
+import org.angproj.io.buf.mutableByteBufferOf
 
-sealed class Packer(override val serializersModule: SerializersModule) : ByteBufferFormat, ByteArrayFormat {
-    companion object Default : Packer(EmptySerializersModule)
+sealed class Packer(
+    internal val encodeDefaults: Boolean,
+    override val serializersModule: SerializersModule
+) : ByteBufferFormat {
+    //companion object Default : Packer(false, EmptySerializersModule)
 
     override fun <T> encodeToByteBuffer(serializer: SerializationStrategy<T>, value: T): MutableBuffer {
-        TODO("Not yet implemented")
+        /*val output = ByteBufferOutput()
+        val encoder = ByteBufferPackerEncoder(this, ByteBufferPackerWriter(output), serializer.descriptor)
+        encoder.encodeSerializableValue(serializer, value)
+        return output.toByteArray()*/
+        return mutableByteBufferOf(1024)
     }
 
-    override fun <T> decodeFromByteBuffer(deserializer: DeserializationStrategy<T>, buffer: Buffer): T {
-        TODO("Not yet implemented")
-    }
-
-    override fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray {
-        TODO("Not yet implemented")
-    }
-
-    override fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T {
-        TODO("Not yet implemented")
-    }
+    /*override fun <T> decodeFromByteBuffer(deserializer: DeserializationStrategy<T>, bytes: Buffer): T {
+        val input = ByteBufferInput(bytes)
+        val decoder = ByteBufferPackerDecoder(this, ByteBufferPackerReader(input), deserializer.descriptor)
+        return decoder.decodeSerializableValue(deserializer)
+    }*/
 }
 
-fun Packer(from: Packer = Packer.Default): Packer = from
+/*fun Packer(from: Packer = Packer.Default, builderAction: PackerBuilder.() -> Unit): Packer {
+    val b = PackerBuilder(from)
+    b.builderAction()
+    return PackerImpl(b.encodeDefaults, b.serializersModule)
+}*/
+
+class PackerBuilder internal constructor(packer: Packer) {
+    var encodeDefaults: Boolean = packer.encodeDefaults
+
+    var serializersModule: SerializersModule = packer.serializersModule
+}
+
+/*private class PackerImpl(encodeDefaults: Boolean, serializersModule: SerializersModule) :
+    Packer(encodeDefaults, serializersModule)*/

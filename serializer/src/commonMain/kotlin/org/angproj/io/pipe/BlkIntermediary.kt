@@ -12,13 +12,17 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-package org.angproj.io.serializer
+package org.angproj.io.pipe
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
-
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
-
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
+/**
+ * Blk intermediary layer for simulated block devices.
+ *
+ * @constructor Create empty Blk intermediary
+ */
+abstract class BlkIntermediary(
+    override val entryPoint: File,
+    override val entryShared: IntermittentTransformer,
+    override val endShared: IntermittentTransformer
+) : Intermediary, Device, File {
+    override var endPoint: Device by EntryPoint.Attach()
 }

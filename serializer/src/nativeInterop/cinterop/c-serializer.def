@@ -1,0 +1,5 @@
+headers = file.h
+staticLibraries.osx = libc-serializer.a
+staticLibraries.linux = libc-serializer.a
+staticLibraries.mingw = c-serializer.lib
+package = cserializer

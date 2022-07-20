@@ -12,13 +12,11 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-package org.angproj.io.serializer
+package org.angproj.io.pipe
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
-
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
-
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
-}
+/**
+ * Intermediary is a combined entry- and endpoint to layer between the top entrypoint and bottom endpoint.
+ *
+ * @constructor Create empty Intermediary
+ */
+interface Intermediary

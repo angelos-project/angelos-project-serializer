@@ -12,13 +12,14 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-package org.angproj.io.serializer
+package org.angproj.io.fs
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
+import org.angproj.io.pipe.Flipper
+import org.angproj.io.pipe.IntermittentTransformer
 
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
+class PassThroughTransformer(descriptor: Descriptor, bufferSize: Int) : IntermittentTransformer(descriptor, bufferSize) {
 
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
+    protected fun flipModeRead() { flip = Flipper.READ }
+
+    protected fun flipModeWrite() { flip = Flipper.WRITE }
 }

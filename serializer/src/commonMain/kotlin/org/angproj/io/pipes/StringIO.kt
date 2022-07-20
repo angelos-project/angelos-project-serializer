@@ -12,13 +12,19 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-package org.angproj.io.serializer
+package org.angproj.io.pipes
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
+class StringIO : TextIOBase {
+    override val encodings: String
+        get() = TODO("Not yet implemented")
+    override val newLine: Char
+        get() = TODO("Not yet implemented")
 
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
+    fun getValue(): ByteArray {
+        TODO("Not yet implemented")
+    }
 
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
+    override fun detach(): RawIOBase {
+        TODO("Not yet implemented")
+    }
 }

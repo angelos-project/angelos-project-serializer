@@ -12,13 +12,13 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-package org.angproj.io.serializer
+package org.angproj.io.pipe
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
+import org.angproj.io.fs.Descriptor
 
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
-
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
-}
+/**
+ * Intermittent executor for processing input and output according to TTY de facto standards.
+ *
+ * @constructor Create empty Intermittent executor
+ */
+open class IntermittentExecutor(descriptor: Descriptor) : Intermittent(descriptor)

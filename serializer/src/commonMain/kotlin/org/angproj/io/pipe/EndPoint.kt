@@ -12,13 +12,14 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-package org.angproj.io.serializer
+package org.angproj.io.pipe
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
-
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
-
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
+/**
+ * Endpoint for IO operations.
+ *
+ * @constructor Create empty End point
+ */
+interface EndPoint<P: Intermix, S: Intermittent> : Intermix {
+    val entryPoint: P
+    val entryShared: S
 }

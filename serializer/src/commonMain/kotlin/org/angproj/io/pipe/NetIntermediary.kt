@@ -12,13 +12,17 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-package org.angproj.io.serializer
+package org.angproj.io.pipe
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
-
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
-
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
+/**
+ * Net intermediary layer for network protocol layer implementations.
+ *
+ * @constructor Create empty Net intermediary
+ */
+class NetIntermediary(
+    override val entryPoint: Protocol,
+    override val entryShared: IntermittentDuplexer,
+    override val endShared: IntermittentDuplexer
+) : Intermediary, Transport, Protocol {
+    override var endPoint: Transport by EntryPoint.Attach()
 }

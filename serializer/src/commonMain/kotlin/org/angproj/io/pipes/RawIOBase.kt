@@ -12,13 +12,17 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-package org.angproj.io.serializer
+package org.angproj.io.pipes
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
+import org.angproj.io.buf.Buffer
+import org.angproj.io.buf.MutableBuffer
 
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
+interface RawIOBase : IOBase {
+    fun read(size: Long = -1): ByteArray
 
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
+    fun readAll(): ByteArray
+
+    fun readInto(buffer: MutableBuffer): Int
+
+    fun write(buffer: Buffer): Int
 }

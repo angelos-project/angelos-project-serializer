@@ -12,13 +12,18 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-package org.angproj.io.serializer
+package org.angproj.io.pipes
 
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerializationStrategy
+interface BaseTransport {
+    val extra: MutableMap<String, String>
 
-interface ByteArrayFormat : SerializationFormat {
-    fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray
+    fun getExtraInfo(name: String): String
 
-    fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, array: ByteArray): T
+    fun isClosing(): Boolean
+
+    fun close()
+
+    fun setProtocol(protocol: Protocol)
+
+    fun getProtocol(): Protocol
 }
