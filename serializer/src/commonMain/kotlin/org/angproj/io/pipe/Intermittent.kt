@@ -15,6 +15,7 @@
 package org.angproj.io.pipe
 
 import org.angproj.io.fs.Descriptor
+import org.angproj.io.fs.Mode
 
 /**
  * Intermittent interface of classes to be shared in between layers.
@@ -22,7 +23,13 @@ import org.angproj.io.fs.Descriptor
  * @constructor Create empty Intermittent
  */
 abstract class Intermittent(val descriptor: Descriptor) {
-    var flip = Flipper.PAUSE
+
+    private var _flipper = Flipper.PAUSE
+    val flipper: Flipper
+        get() = _flipper
+    fun flipModeRead() { _flipper = Flipper.READ }
+
+    fun flipModeWrite() { _flipper = Flipper.WRITE }
 
     @Suppress("NAME_SHADOWING")
     open fun <E0: EntryPoint<E1, *>, E1: EndPoint<E0, *>> assemble (

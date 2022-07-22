@@ -26,6 +26,17 @@ interface EntryPoint<P: Intermix, S: Intermittent> : Intermix {
     val endShared: S
 
     /**
+     * Find the true lowest EndPoint of a stack in case of several Intermediaries.
+     *
+     * @param end
+     * @return
+     */
+    fun getTrueEndOf(end: EndPoint<*, *> = endPoint as EndPoint<*, *>): EndPoint<*, *> = when(end) {
+        is EntryPoint<*, *> -> getTrueEndOf(end.endPoint as EndPoint<*, *>)
+        else -> end
+    }
+
+    /**
      * Attach works as a delegate for later attachment of the EndPoint
      * to simplify complex initialization of a build.
      *

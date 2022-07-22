@@ -14,6 +14,19 @@
  */
 package org.angproj.io.pipe
 
-abstract class AbstractTransport(override val entryPoint: Protocol, override val entryShared: IntermittentDuplexer) : Transport {
-    val trueEntry by lazy { getTrueEntryOf() as AbstractProtocol}
+import org.angproj.io.buf.ByteBufferOverflowWarning
+
+inline fun <T> File.readByBreak(action: () -> T): T = try {
+    action()
+} catch (_: ByteBufferOverflowWarning) {
+    endPoint.forward()
+    action()
+}
+
+
+inline fun File.writeByBreak(action: () -> Unit): Unit = try {
+    action()
+} catch (_: ByteBufferOverflowWarning) {
+    endPoint.forward()
+    action()
 }

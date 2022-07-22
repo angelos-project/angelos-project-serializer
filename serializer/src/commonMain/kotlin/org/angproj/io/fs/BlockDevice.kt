@@ -14,11 +14,16 @@
  */
 package org.angproj.io.fs
 
+import org.angproj.io.buf.MutableNativeBuffer
 import org.angproj.io.pipe.*
 
 class BlockDevice(entryPoint: File, entryShared: IntermittentTransformer) : AbstractDevice(entryPoint, entryShared) {
+    override fun doFlush(): Unit = when(entryShared.flipper) {
+        Flipper.WRITE -> forwardWrite()
+        else -> Unit
+    }
 
-    override fun doTell(): Long = Internals.tellFile(entryShared.descriptor)
+    override fun doTell(): Long = entryShared.position
 
     override fun doSeek(position: Long, whence: Seek): Long {
 
@@ -26,5 +31,16 @@ class BlockDevice(entryPoint: File, entryShared: IntermittentTransformer) : Abst
 
     override fun doTruncate(position: Long): Long {
 
+    }
+
+    override fun doClose() {
+
+    }
+
+    override fun forwardWrite() {
+        check(entryShared.flipper == Flipper.WRITE)
+
+        val buffer = entryShared.bufferSwap()
+        check(Internals.writeFile(entryShared.descriptor, buffer as MutableNativeBuffer) == buffer.limit.toLong())
     }
 }

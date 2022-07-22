@@ -18,8 +18,4 @@ import org.angproj.io.pipe.Flipper
 import org.angproj.io.pipe.IntermittentTransformer
 
 class PassThroughTransformer(descriptor: Descriptor, bufferSize: Int) : IntermittentTransformer(descriptor, bufferSize) {
-
-    protected fun flipModeRead() { flip = Flipper.READ }
-
-    protected fun flipModeWrite() { flip = Flipper.WRITE }
 }

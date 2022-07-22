@@ -15,4 +15,5 @@
 package org.angproj.io.pipe
 
 abstract class AbstractMemory(override val entryPoint: Sheet, override val entryShared: Intermittent) : Memory {
+    val trueEntry by lazy { getTrueEntryOf() as AbstractSheet}
 }

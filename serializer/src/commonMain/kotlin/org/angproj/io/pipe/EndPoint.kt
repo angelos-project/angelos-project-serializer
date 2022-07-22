@@ -22,4 +22,15 @@ package org.angproj.io.pipe
 interface EndPoint<P: Intermix, S: Intermittent> : Intermix {
     val entryPoint: P
     val entryShared: S
+
+    /**
+     * Find the true uppermost EntryPoint of a stack in case of several Intermediaries.
+     *
+     * @param entry
+     * @return
+     */
+    fun getTrueEntryOf(entry: EntryPoint<*, *> = entryPoint as EntryPoint<*, *>): EntryPoint<*, *> = when(entry) {
+        is EndPoint<*, *> -> getTrueEntryOf(entry.entryPoint as EntryPoint<*, *>)
+        else -> entry
+    }
 }

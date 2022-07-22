@@ -16,4 +16,5 @@ package org.angproj.io.pipe
 
 abstract class AbstractFile(override val endShared: IntermittentTransformer) : File {
     override var endPoint: Device by EntryPoint.Attach()
+    val trueEnd by lazy { getTrueEndOf() as AbstractDevice}
 }

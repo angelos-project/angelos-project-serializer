@@ -16,4 +16,5 @@ package org.angproj.io.pipe
 
 abstract class AbstractTerminal(override val endShared: IntermittentExecutor) : Terminal {
     override var endPoint: Shell by EntryPoint.Attach()
+    val trueEnd by lazy { getTrueEndOf() as AbstractShell }
 }

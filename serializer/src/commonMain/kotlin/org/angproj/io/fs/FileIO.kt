@@ -24,44 +24,113 @@ class FileIO(endShared: IntermittentTransformer) : AbstractFile(endShared), Read
         get() = _closed
 
     fun <T: Serializable> read(): T {
+        check(isReadable())
+        endShared.flipModeRead()
+
         TODO("Not yet implemented")
     }
 
     fun <T: Serializable> write(info: T): Int {
+        check(isWritable())
+        endShared.flipModeWrite()
+
         TODO("Not yet implemented")
     }
 
     fun flush() {
-        TODO("Not yet implemented")
+        endPoint.doFlush()
     }
 
-    fun tell(): Long = endPoint.doTell()
+    fun tell(): Long {
+        check(isSeekable())
+        return endPoint.doTell()
+    }
 
     fun seek(position: Long, whence: Seek): Long {
+        check(isSeekable())
+
         TODO("Not yet implemented")
     }
 
     fun truncate(position: Long): Long {
+        check(isWritable())
+        check(isReadable())
+
         TODO("Not yet implemented")
     }
 
     fun close() {
-        TODO("Not yet implemented")
+        if (!_closed) {
+            endPoint.doClose()
+        }
     }
 
     fun isReadable(): Boolean {
-        TODO("Not yet implemented")
+        check(!_closed)
+        return trueEnd.isReadable
     }
 
     fun isWritable(): Boolean {
-        TODO("Not yet implemented")
+        check(!_closed)
+        return trueEnd.isWritable
     }
 
     fun isSeekable(): Boolean {
-        TODO("Not yet implemented")
+        check(!_closed)
+        return trueEnd.isReadable and trueEnd.isWritable
     }
 
-    fun isInteractive(): Boolean = false
+    fun isInteractive(): Boolean {
+        check(!_closed)
+        return false
+    }
+
+    // Readable interface implementation
+    override fun readByte(): Byte = readByBreak { endShared.middleBuffer.getNextByte() }
+
+    override fun readUByte(): UByte = readByBreak { endShared.middleBuffer.getNextUByte() }
+
+    override fun readChar(): Char = readByBreak { endShared.middleBuffer.getNextChar() }
+
+    override fun readShort(): Short = readByBreak { endShared.middleBuffer.getNextShort() }
+
+    override fun readUShort(): UShort = readByBreak { endShared.middleBuffer.getNextUShort() }
+
+    override fun readInt(): Int = readByBreak { endShared.middleBuffer.getNextInt() }
+
+    override fun readUInt(): UInt = readByBreak { endShared.middleBuffer.getNextUInt() }
+
+    override fun readLong(): Long = readByBreak { endShared.middleBuffer.getNextLong() }
+
+    override fun readULong(): ULong = readByBreak { endShared.middleBuffer.getNextULong() }
+
+    override fun readFloat(): Float = readByBreak { endShared.middleBuffer.getNextFloat() }
+
+    override fun readDouble(): Double = readByBreak { endShared.middleBuffer.getNextDouble() }
+
+    // Writable interface implementation
+
+    override fun writeByte(value: Byte) = writeByBreak { endShared.middleBuffer.setNextByte(value) }
+
+    override fun writeUByte(value: UByte) = writeByBreak { endShared.middleBuffer.setNextUByte(value) }
+
+    override fun writeChar(value: Char) = writeByBreak { endShared.middleBuffer.setNextChar(value) }
+
+    override fun writeShort(value: Short) = writeByBreak { endShared.middleBuffer.setNextShort(value) }
+
+    override fun writeUShort(value: UShort) = writeByBreak { endShared.middleBuffer.setNextUShort(value) }
+
+    override fun writeInt(value: Int) = writeByBreak { endShared.middleBuffer.setNextInt(value) }
+
+    override fun writeUInt(value: UInt) = writeByBreak { endShared.middleBuffer.setNextUInt(value) }
+
+    override fun writeLong(value: Long) = writeByBreak { endShared.middleBuffer.setNextLong(value) }
+
+    override fun writeULong(value: ULong) = writeByBreak { endShared.middleBuffer.setNextULong(value) }
+
+    override fun writeFloat(value: Float) = writeByBreak { endShared.middleBuffer.setNextFloat(value) }
+
+    override fun writeDouble(value: Double) = writeByBreak { endShared.middleBuffer.setNextDouble(value) }
 
 }
 

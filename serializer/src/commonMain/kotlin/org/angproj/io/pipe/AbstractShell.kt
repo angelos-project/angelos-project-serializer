@@ -15,4 +15,5 @@
 package org.angproj.io.pipe
 
 abstract class AbstractShell(override val entryPoint: Terminal, override val entryShared: IntermittentExecutor) : Shell {
+    val trueEntry by lazy { getTrueEntryOf() as AbstractTerminal}
 }

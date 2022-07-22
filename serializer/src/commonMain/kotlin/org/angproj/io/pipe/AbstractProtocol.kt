@@ -16,4 +16,5 @@ package org.angproj.io.pipe
 
 abstract class AbstractProtocol(override val endShared: IntermittentDuplexer) : Protocol{
     override var endPoint: Transport by EntryPoint.Attach()
+    val trueEnd by lazy { getTrueEndOf() as AbstractProtocol}
 }

@@ -24,5 +24,19 @@ import org.angproj.io.fs.Descriptor
  * @constructor Create empty Intermittent transformer
  */
 open class IntermittentTransformer(descriptor: Descriptor, val bufferSize: Int) : Intermittent(descriptor) {
-    protected var middleBuffer: MutableBuffer = mutableNativeByteBufferOf(bufferSize)
+
+    var offset: Long = 0
+
+    val position: Long
+        get() = offset + middleBuffer.position
+
+    var middleBuffer: MutableBuffer = mutableNativeByteBufferOf(bufferSize)
+
+    fun bufferSwap(bufferSize: Int = this.bufferSize): MutableBuffer {
+        val buffer = middleBuffer
+        buffer.flip()
+        offset += buffer.limit
+        middleBuffer = mutableNativeByteBufferOf(bufferSize)
+        return buffer
+    }
 }

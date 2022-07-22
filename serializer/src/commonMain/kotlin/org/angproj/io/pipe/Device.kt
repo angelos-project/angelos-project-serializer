@@ -15,9 +15,15 @@
 package org.angproj.io.pipe
 
 interface Device : EndPoint<File, IntermittentTransformer> {
+    fun doFlush()
+
     fun doTell(): Long
 
     fun doSeek(position: Long, whence: Seek): Long
 
     fun doTruncate(position: Long): Long
+
+    fun doClose()
+
+    fun forwardWrite()
 }

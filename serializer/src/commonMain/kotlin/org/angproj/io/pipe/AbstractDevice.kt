@@ -14,5 +14,67 @@
  */
 package org.angproj.io.pipe
 
+import org.angproj.io.fs.Mode
+
 abstract class AbstractDevice(override val entryPoint: File, override val entryShared: IntermittentTransformer) : Device {
+    val trueEntry by lazy { getTrueEntryOf() as AbstractFile }
+
+    private var _readable = true
+    val isReadable: Boolean
+        get() = _readable
+
+    private var _writable = true
+    val isWritable: Boolean
+        get() = _writable
+
+    fun updateMode(mode: Mode): Unit = when(mode) {
+        Mode.READ_ONLY_TXT -> {
+            _readable = true
+            _writable = false
+        }
+        Mode.WRITE_ONLY_TXT -> {
+            _readable = false
+            _writable = true
+        }
+        Mode.APPENDING_TXT -> {
+            _readable = false
+            _writable = true
+        }
+        Mode.READ_PLUS_TXT -> {
+            _readable = true
+            _writable = true
+        }
+        Mode.WRITE_PLUS_TXT -> {
+            _readable = true
+            _writable = true
+        }
+        Mode.APPEND_PLUS_TXT -> {
+            _readable = true
+            _writable = true
+        }
+        Mode.READ_ONLY_BIN -> {
+            _readable = true
+            _writable = false
+        }
+        Mode.WRITE_ONLY_BIN -> {
+            _readable = false
+            _writable = true
+        }
+        Mode.APPENDING_BIN -> {
+            _readable = false
+            _writable = true
+        }
+        Mode.READ_PLUS_BIN -> {
+            _readable = true
+            _writable = true
+        }
+        Mode.WRITE_PLUS_BIN -> {
+            _readable = true
+            _writable = true
+        }
+        Mode.APPEND_PLUS_BIN -> {
+            _readable = true
+            _writable = true
+        }
+    }
 }

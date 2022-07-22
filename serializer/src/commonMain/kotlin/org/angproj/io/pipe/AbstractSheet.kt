@@ -16,4 +16,5 @@ package org.angproj.io.pipe
 
 abstract class AbstractSheet(override val endShared: Intermittent) : Sheet {
     override var endPoint: Memory by EntryPoint.Attach()
+    val trueEnd by lazy { getTrueEndOf() as AbstractMemory}
 }
