@@ -19,7 +19,7 @@ import org.angproj.io.buf.ByteBufferOverflowWarning
 inline fun <T> File.readByBreak(action: () -> T): T = try {
     action()
 } catch (_: ByteBufferOverflowWarning) {
-    endPoint.forward()
+    endPoint.forwardWrite()
     action()
 }
 
@@ -27,6 +27,6 @@ inline fun <T> File.readByBreak(action: () -> T): T = try {
 inline fun File.writeByBreak(action: () -> Unit): Unit = try {
     action()
 } catch (_: ByteBufferOverflowWarning) {
-    endPoint.forward()
+    endPoint.forwardWrite()
     action()
 }

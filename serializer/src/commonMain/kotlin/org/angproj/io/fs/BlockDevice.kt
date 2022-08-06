@@ -26,15 +26,15 @@ class BlockDevice(entryPoint: File, entryShared: IntermittentTransformer) : Abst
     override fun doTell(): Long = entryShared.position
 
     override fun doSeek(position: Long, whence: Seek): Long {
-
+        return Internals.seekFile(entryShared.descriptor, position, whence)
     }
 
     override fun doTruncate(position: Long): Long {
-
+        return Internals.truncateFile(entryShared.descriptor, position)
     }
 
     override fun doClose() {
-
+        Internals.closeFile(entryShared.descriptor)
     }
 
     override fun forwardWrite() {
