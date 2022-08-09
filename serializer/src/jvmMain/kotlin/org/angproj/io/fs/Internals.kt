@@ -14,45 +14,24 @@
  */
 package org.angproj.io.fs
 
-import org.angproj.io.buf.MutableNativeBuffer
 import org.angproj.io.buf.NativeBuffer
 import org.angproj.io.pipe.Seek
 
-internal actual class Internals {
+actual class Internals {
     actual companion object {
-        init {
-            System.loadLibrary("jni-serializer")
-        }
+        actual fun openFile(path: Path, mode: Mode): Descriptor = fs_fopen(path.toString(), mode.mode)
 
-        actual fun openFile(path: Path, mode: Mode): Descriptor {
-            return fs_fopen(path.toString(), mode.mode)
-        }
+        actual fun closeFile(filePointer: Descriptor): Int = fs_fclose(filePointer)
 
-        actual fun closeFile(filePointer: Descriptor): Boolean = when(fs_fclose(filePointer)) {
-            0 -> true
-            -1 -> false
-            else -> error("Unknown return code")
-        }
+        actual fun readFile(filePointer: Descriptor, buffer: NativeBuffer): Int = fs_fread(buffer.getPointer(), buffer.limit, filePointer)
 
-        actual fun readFile(filePointer: Descriptor, buffer: NativeBuffer): Long {
-            return fs_fread(buffer.getPointer(), buffer.limit, filePointer)
-        }
+        actual fun writeFile(filePointer: Descriptor, buffer: NativeBuffer): Int = fs_fwrite(buffer.getPointer(), buffer.limit, filePointer)
 
-        actual fun writeFile(filePointer: Descriptor, buffer: MutableNativeBuffer): Long {
-            return fs_fwrite(buffer.getPointer(), buffer.limit, filePointer)
-        }
+        actual fun seekFile(filePointer: Descriptor, position: Long, whence: Seek): Int = fs_fseek(filePointer, position, whence.whence)
 
-        actual fun seekFile(filePointer: Descriptor, position: Long, whence: Seek): Long {
-            return fs_fseek(filePointer, position, whence.whence)
-        }
+        actual fun tellFile(filePointer: Descriptor): Long = fs_ftell(filePointer)
 
-        actual fun tellFile(filePointer: Descriptor): Long {
-            return fs_ftell(filePointer)
-        }
-
-        actual fun truncateFile(filePointer: Descriptor, offset: Long): Long {
-            return fs_ftruncate(filePointer, offset)
-        }
+        actual fun truncateFile(filePointer: Descriptor, offset: Long): Int = fs_ftruncate(filePointer, offset)
 
         @JvmStatic
         private external fun fs_fopen(path: String, mode: String): Long
@@ -61,18 +40,18 @@ internal actual class Internals {
         private external fun fs_fclose(fp: Long): Int
 
         @JvmStatic
-        private external fun fs_fread(buffer: Long, count: Int, fp: Long): Long
+        private external fun fs_fread(buffer: Long, count: Int, fp: Long): Int
 
         @JvmStatic
-        private external fun fs_fwrite(buffer: Long, count: Int, fp: Long): Long
+        private external fun fs_fwrite(buffer: Long, count: Int, fp: Long): Int
 
         @JvmStatic
-        private external fun fs_fseek(fp: Long, offset: Long, whence: Int): Long
+        private external fun fs_fseek(fp: Long, offset: Long, whence: Int): Int
 
         @JvmStatic
         private external fun fs_ftell(fp: Long): Long
 
         @JvmStatic
-        private external fun fs_ftruncate(fp: Long, length: Long): Long
+        private external fun fs_ftruncate(fp: Long, length: Long): Int
     }
 }

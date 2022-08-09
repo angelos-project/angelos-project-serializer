@@ -14,23 +14,23 @@
  */
 package org.angproj.io.fs
 
-import org.angproj.io.buf.*
+import org.angproj.io.buf.NativeBuffer
 import org.angproj.io.pipe.Seek
 
-internal expect class Internals {
+expect class Internals {
     companion object {
         fun openFile(path: Path, mode: Mode): Descriptor
 
-        fun closeFile(filePointer: Descriptor): Boolean
+        fun closeFile(filePointer: Descriptor): Int
 
-        fun readFile(filePointer: Descriptor, buffer: NativeBuffer): Long
+        fun readFile(filePointer: Descriptor, buffer: NativeBuffer): Int
 
-        fun writeFile(filePointer: Descriptor, buffer: MutableNativeBuffer): Long
+        fun writeFile(filePointer: Descriptor, buffer: NativeBuffer): Int
 
-        fun seekFile(filePointer: Descriptor, position: Long, whence: Seek): Long
+        fun seekFile(filePointer: Descriptor, position: Long, whence: Seek): Int
 
         fun tellFile(filePointer: Descriptor): Long
 
-        fun truncateFile(filePointer: Descriptor, offset: Long): Long
+        fun truncateFile(filePointer: Descriptor, offset: Long): Int
     }
 }

@@ -15,7 +15,7 @@
 package org.angproj.io.pipe
 
 import org.angproj.io.buf.MutableBuffer
-import org.angproj.io.buf.mutableByteBufferOf
+import org.angproj.io.buf.stream.mutableStreamByteBufferOf
 import org.angproj.io.fs.Descriptor
 
 /**
@@ -24,6 +24,6 @@ import org.angproj.io.fs.Descriptor
  * @constructor Create empty Intermittent duplexer
  */
 open class IntermittentDuplexer(descriptor: Descriptor, val bufferSize: Int) : Intermittent(descriptor) {
-    protected var readingBuffer: MutableBuffer = mutableByteBufferOf(bufferSize)
-    protected var writingBuffer: MutableBuffer = mutableByteBufferOf(bufferSize)
+    protected var readingBuffer: MutableBuffer = mutableStreamByteBufferOf(bufferSize)
+    protected var writingBuffer: MutableBuffer = mutableStreamByteBufferOf(bufferSize)
 }

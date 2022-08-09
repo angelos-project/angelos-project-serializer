@@ -20,7 +20,7 @@ import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import org.angproj.io.buf.Buffer
 import org.angproj.io.buf.MutableBuffer
-import org.angproj.io.buf.mutableByteBufferOf
+import org.angproj.io.buf.stream.mutableStreamByteBufferOf
 
 sealed class Packer(
     internal val encodeDefaults: Boolean,
@@ -33,7 +33,7 @@ sealed class Packer(
         val encoder = ByteBufferPackerEncoder(this, ByteBufferPackerWriter(output), serializer.descriptor)
         encoder.encodeSerializableValue(serializer, value)
         return output.toByteArray()*/
-        return mutableByteBufferOf(1024)
+        return mutableStreamByteBufferOf(1024)
     }
 
     /*override fun <T> decodeFromByteBuffer(deserializer: DeserializationStrategy<T>, bytes: Buffer): T {

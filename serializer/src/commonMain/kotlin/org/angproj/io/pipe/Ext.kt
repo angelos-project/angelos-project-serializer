@@ -14,11 +14,11 @@
  */
 package org.angproj.io.pipe
 
-import org.angproj.io.buf.ByteBufferOverflowWarning
+import org.angproj.io.buf.BufferOverflowWarning
 
 inline fun <T> File.readByBreak(action: () -> T): T = try {
     action()
-} catch (_: ByteBufferOverflowWarning) {
+} catch (_: BufferOverflowWarning) {
     endPoint.forwardWrite()
     action()
 }
@@ -26,7 +26,7 @@ inline fun <T> File.readByBreak(action: () -> T): T = try {
 
 inline fun File.writeByBreak(action: () -> Unit): Unit = try {
     action()
-} catch (_: ByteBufferOverflowWarning) {
+} catch (_: BufferOverflowWarning) {
     endPoint.forwardWrite()
     action()
 }

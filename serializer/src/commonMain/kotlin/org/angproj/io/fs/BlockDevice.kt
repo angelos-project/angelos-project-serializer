@@ -14,7 +14,7 @@
  */
 package org.angproj.io.fs
 
-import org.angproj.io.buf.MutableNativeBuffer
+import org.angproj.io.buf.stream.MutableNativeStreamBuffer
 import org.angproj.io.pipe.*
 
 class BlockDevice(entryPoint: File, entryShared: IntermittentTransformer) : AbstractDevice(entryPoint, entryShared) {
@@ -25,11 +25,11 @@ class BlockDevice(entryPoint: File, entryShared: IntermittentTransformer) : Abst
 
     override fun doTell(): Long = entryShared.position
 
-    override fun doSeek(position: Long, whence: Seek): Long {
+    override fun doSeek(position: Long, whence: Seek): Int {
         return Internals.seekFile(entryShared.descriptor, position, whence)
     }
 
-    override fun doTruncate(position: Long): Long {
+    override fun doTruncate(position: Long): Int {
         return Internals.truncateFile(entryShared.descriptor, position)
     }
 
@@ -41,6 +41,6 @@ class BlockDevice(entryPoint: File, entryShared: IntermittentTransformer) : Abst
         check(entryShared.flipper == Flipper.WRITE)
 
         val buffer = entryShared.bufferSwap()
-        check(Internals.writeFile(entryShared.descriptor, buffer as MutableNativeBuffer) == buffer.limit.toLong())
+        check(Internals.writeFile(entryShared.descriptor, buffer as MutableNativeStreamBuffer) == buffer.limit)
     }
 }

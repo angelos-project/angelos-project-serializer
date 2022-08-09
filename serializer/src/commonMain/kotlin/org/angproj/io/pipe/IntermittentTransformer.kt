@@ -15,7 +15,8 @@
 package org.angproj.io.pipe
 
 import org.angproj.io.buf.MutableBuffer
-import org.angproj.io.buf.mutableNativeByteBufferOf
+import org.angproj.io.buf.stream.MutableStreamBuffer
+import org.angproj.io.buf.stream.mutableNativeStreamByteBufferOf
 import org.angproj.io.fs.Descriptor
 
 /**
@@ -30,13 +31,13 @@ open class IntermittentTransformer(descriptor: Descriptor, val bufferSize: Int) 
     val position: Long
         get() = offset + middleBuffer.position
 
-    var middleBuffer: MutableBuffer = mutableNativeByteBufferOf(bufferSize)
+    var middleBuffer: MutableStreamBuffer = mutableNativeStreamByteBufferOf(bufferSize)
 
-    fun bufferSwap(bufferSize: Int = this.bufferSize): MutableBuffer {
+    fun bufferSwap(bufferSize: Int = this.bufferSize): MutableStreamBuffer {
         val buffer = middleBuffer
         buffer.flip()
         offset += buffer.limit
-        middleBuffer = mutableNativeByteBufferOf(bufferSize)
+        middleBuffer = mutableNativeStreamByteBufferOf(bufferSize)
         return buffer
     }
 }

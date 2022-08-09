@@ -12,9 +12,7 @@
  * Contributors:
  *      Kristoffer Paulsson - initial implementation
  */
-rootProject.name = "angelos-project-serializer"
+package org.angproj.io.pipe
 
-include(":c-serializer")
-include(":jni-serializer")
-include(":jni-fs")
-include(":serializer")
+class EOFException(message: String) : RuntimeException(message) {
+}

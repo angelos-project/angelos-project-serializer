@@ -33,6 +33,9 @@ class FileIOTest {
             data[index] = file.readByte()
         }
 
+        println(data.average())
+        println(data2.average())
+
         assertEquals(data, data2)
 
         file.truncate(0)

@@ -14,39 +14,23 @@
  */
 package org.angproj.io.fs
 
-import org.angproj.io.buf.MutableNativeBuffer
 import org.angproj.io.buf.NativeBuffer
 import org.angproj.io.pipe.Seek
 
-internal actual class Internals {
+actual class Internals {
     actual companion object {
-        actual fun openFile(path: Path, mode: Mode): Descriptor {
-            throw UnsupportedOperationException("Not implemented")
-        }
+        actual fun openFile(path: Path, mode: Mode): Descriptor { TODO("Contribution required for implementation.") }
 
-        actual fun closeFile(filePointer: Descriptor): Boolean {
-            throw UnsupportedOperationException("Not implemented")
-        }
+        actual fun closeFile(filePointer: Descriptor): Int { TODO("Contribution required for implementation.") }
 
-        actual fun readFile(filePointer: Descriptor, buffer: NativeBuffer): Long {
-            throw UnsupportedOperationException("Not implemented")
-        }
+        actual fun readFile(filePointer: Descriptor, buffer: NativeBuffer): Int { TODO("Contribution required for implementation.") }
 
-        actual fun writeFile(filePointer: Descriptor, buffer: MutableNativeBuffer): Long {
-            throw UnsupportedOperationException("Not implemented")
-        }
+        actual fun writeFile(filePointer: Descriptor, buffer: NativeBuffer): Int { TODO("Contribution required for implementation.") }
 
-        actual fun seekFile(filePointer: Descriptor, position: Long, whence: Seek): Long {
-            throw UnsupportedOperationException("Not implemented")
-        }
+        actual fun seekFile(filePointer: Descriptor, position: Long, whence: Seek): Int { TODO("Contribution required for implementation.") }
 
-        actual fun tellFile(filePointer: Descriptor): Long {
-            throw UnsupportedOperationException("Not implemented")
-        }
+        actual fun tellFile(filePointer: Descriptor): Long { TODO("Contribution required for implementation.") }
 
-        actual fun truncateFile(filePointer: Descriptor, offset: Long): Long {
-            throw UnsupportedOperationException("Not implemented")
-        }
+        actual fun truncateFile(filePointer: Descriptor, offset: Long): Int { TODO("Contribution required for implementation.") }
     }
-
 }

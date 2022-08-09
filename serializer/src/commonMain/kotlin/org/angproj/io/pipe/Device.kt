@@ -19,9 +19,9 @@ interface Device : EndPoint<File, IntermittentTransformer> {
 
     fun doTell(): Long
 
-    fun doSeek(position: Long, whence: Seek): Long
+    fun doSeek(position: Long, whence: Seek): Int
 
-    fun doTruncate(position: Long): Long
+    fun doTruncate(position: Long): Int
 
     fun doClose()
 

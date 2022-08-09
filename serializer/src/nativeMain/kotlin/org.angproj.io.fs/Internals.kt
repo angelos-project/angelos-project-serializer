@@ -14,42 +14,48 @@
  */
 package org.angproj.io.fs
 
-import cserializer.*
-import org.angproj.io.buf.MutableNativeBuffer
+import kotlinx.cinterop.*
 import org.angproj.io.buf.NativeBuffer
 import org.angproj.io.pipe.Seek
+import platform.darwin.BytePtrVar
+import platform.posix.*
 
-internal actual class Internals {
+actual class Internals {
     actual companion object {
-        actual fun openFile(path: Path, mode: Mode): Descriptor {
-            return fs_fopen(path.toString(), mode.mode)
-        }
+        actual inline fun openFile(path: Path, mode: Mode): Descriptor = fopen(
+            path.toString(),
+            mode.toString()
+        ).toLong()
 
-        actual fun closeFile(filePointer: Descriptor): Boolean = when(fs_fclose(filePointer)) {
-            0 -> true
-            -1 -> false
-            else -> error("Unknown return code")
-        }
+        actual inline fun closeFile(filePointer: Descriptor): Int = fclose(filePointer.toCPointer())
 
-        actual fun readFile(filePointer: Descriptor, buffer: NativeBuffer): Long {
-            return fs_fread(buffer.getPointer(), buffer.limit, filePointer)
-        }
+        actual inline fun readFile(filePointer: Descriptor, buffer: NativeBuffer): Int = fwrite(
+            buffer.getPointer().toCPointer<BytePtrVar>(),
+            1,
+            buffer.limit.toULong(),
+            filePointer.toCPointer()
+            ).toInt()
 
-        actual fun writeFile(filePointer: Descriptor, buffer: MutableNativeBuffer): Long {
-            return fs_fwrite(buffer.getPointer(), buffer.limit, filePointer)
-        }
+        actual inline fun writeFile(filePointer: Descriptor, buffer: NativeBuffer): Int = fwrite(
+            buffer.getPointer().toCPointer<BytePtrVar>(),
+            1,
+            buffer.limit.toULong(),
+            filePointer.toCPointer()
+        ).toInt()
 
-        actual fun seekFile(filePointer: Descriptor, position: Long, whence: Seek): Long {
-            return fs_fseek(filePointer, position, whence.whence)
-        }
+        actual inline fun seekFile(filePointer: Descriptor, position: Long, whence: Seek): Int = fseek(
+            filePointer.toCPointer(),
+            position,
+            whence.whence
+        )
 
-        actual fun tellFile(filePointer: Descriptor): Long {
-            return fs_ftell(filePointer)
-        }
+        actual inline fun tellFile(filePointer: Descriptor): Long = ftell(
+            filePointer.toCPointer()
+        )
 
-        actual fun truncateFile(filePointer: Descriptor, offset: Long): Long {
-            return fs_ftruncate(filePointer, offset)
-        }
-
+        actual inline fun truncateFile(filePointer: Descriptor, offset: Long): Int = ftruncate(
+            fileno(filePointer.toCPointer()),
+            offset
+        )
     }
 }
