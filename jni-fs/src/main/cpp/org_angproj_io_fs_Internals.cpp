@@ -93,8 +93,35 @@ static jlong fs_ftell(JNIEnv * env, jclass thisClass, jlong fp) {
  * Method:    fs_ftruncate
  * Signature: (JJ)I
  */
-static jlong fs_ftruncate(JNIEnv * env, jclass thisClass, jlong fp, jlong length) {
+static jint fs_ftruncate(JNIEnv * env, jclass thisClass, jlong fp, jlong length) {
     return (jint) ftruncate(fileno((FILE *) fp), (off_t) length);
+}
+
+/*
+ * Class:     org_angproj_io_fs_Internals
+ * Method:    fs_feof
+ * Signature: (J)I
+ */
+static jint fs_feof(JNIEnv * env, jclass thisClass, jlong fp) {
+    return (jint) feof((FILE *) fp);
+}
+
+/*
+ * Class:     org_angproj_io_fs_Internals
+ * Method:    fs_ferror
+ * Signature: (J)I
+ */
+static jint fs_ferror(JNIEnv * env, jclass thisClass, jlong fp) {
+    return (jint) ferror((FILE *) fp);
+}
+
+/*
+ * Class:     org_angproj_io_fs_Internals
+ * Method:    fs_ftruncate
+ * Signature: (J)V
+ */
+static void fs_clearall(JNIEnv * env, jclass thisClass, jlong fp) {
+    clearerr((FILE *) fp);
 }
 
 static JNINativeMethod funcs[] = {
@@ -104,7 +131,10 @@ static JNINativeMethod funcs[] = {
 	{ "fs_fwrite", "(JIJ)I", (void *)&fs_fwrite },
 	{ "fs_fseek", "(JJI)I", (void *)&fs_fseek },
 	{ "fs_ftell", "(J)J", (void *)&fs_ftell },
-	{ "fs_ftruncate", "(JJ)I", (void *)&fs_ftruncate }
+	{ "fs_ftruncate", "(JJ)I", (void *)&fs_ftruncate },
+	{ "fs_feof", "(J)I", (void *)&fs_feof },
+	{ "fs_ferror", "(J)I", (void *)&fs_ferror },
+	{ "fs_clearall", "(J)V", (void *)&fs_clearall }
 };
 
 #define CURRENT_JNI JNI_VERSION_1_6

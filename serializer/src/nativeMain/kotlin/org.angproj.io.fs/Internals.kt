@@ -16,6 +16,8 @@ package org.angproj.io.fs
 
 import kotlinx.cinterop.*
 import org.angproj.io.buf.NativeBuffer
+import org.angproj.io.pipe.EOFException
+import org.angproj.io.pipe.IOException
 import org.angproj.io.pipe.Seek
 import platform.darwin.BytePtrVar
 import platform.posix.*
@@ -57,5 +59,21 @@ actual class Internals {
             fileno(filePointer.toCPointer()),
             offset
         )
+
+        actual inline fun eofFile(filePointer: Descriptor) {
+            val code = feof(filePointer.toCPointer())
+            if(code != 0) {
+                clearerr(filePointer.toCPointer())
+                throw EOFException("End of file with code (${code}) for file ${filePointer}.")
+            }
+        }
+
+        actual inline fun errorFile(filePointer: Descriptor) {
+            val code = ferror(filePointer.toCPointer())
+            if(code != 0) {
+                clearerr(filePointer.toCPointer())
+                throw IOException("IO error with code (${code}) for file ${filePointer}.")
+            }
+        }
     }
 }

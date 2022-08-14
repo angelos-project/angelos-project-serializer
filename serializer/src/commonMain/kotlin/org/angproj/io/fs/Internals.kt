@@ -32,5 +32,9 @@ expect class Internals {
         fun tellFile(filePointer: Descriptor): Long
 
         fun truncateFile(filePointer: Descriptor, offset: Long): Int
+
+        fun eofFile(filePointer: Descriptor)
+
+        fun errorFile(filePointer: Descriptor)
     }
 }

@@ -32,5 +32,9 @@ actual class Internals {
         actual fun tellFile(filePointer: Descriptor): Long { TODO("Contribution required for implementation.") }
 
         actual fun truncateFile(filePointer: Descriptor, offset: Long): Int { TODO("Contribution required for implementation.") }
+
+        actual fun eofFile(filePointer: Descriptor) { TODO("Contribution required for implementation.") }
+
+        actual fun errorFile(filePointer: Descriptor)  { TODO("Contribution required for implementation.") }
     }
 }

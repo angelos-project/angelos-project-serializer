@@ -15,6 +15,8 @@
 package org.angproj.io.fs
 
 import org.angproj.io.buf.NativeBuffer
+import org.angproj.io.pipe.EOFException
+import org.angproj.io.pipe.IOException
 import org.angproj.io.pipe.Seek
 
 actual class Internals {
@@ -32,6 +34,22 @@ actual class Internals {
         actual fun tellFile(filePointer: Descriptor): Long = fs_ftell(filePointer)
 
         actual fun truncateFile(filePointer: Descriptor, offset: Long): Int = fs_ftruncate(filePointer, offset)
+
+        actual fun eofFile(filePointer: Descriptor) {
+            val code = fs_feof(filePointer)
+            if(code != 0) {
+                fs_clearerr(filePointer)
+                throw EOFException("End of file with code (${code}) for file ${filePointer}.")
+            }
+        }
+
+        actual fun errorFile(filePointer: Descriptor) {
+            val code = fs_ferror(filePointer)
+            if(code != 0) {
+                fs_clearerr(filePointer)
+                throw IOException("IO error with code (${code}) for file ${filePointer}.")
+            }
+        }
 
         @JvmStatic
         private external fun fs_fopen(path: String, mode: String): Long
@@ -53,5 +71,14 @@ actual class Internals {
 
         @JvmStatic
         private external fun fs_ftruncate(fp: Long, length: Long): Int
+
+        @JvmStatic
+        private external fun fs_feof(fp: Long): Int
+
+        @JvmStatic
+        private external fun fs_ferror(fp: Long): Int
+
+        @JvmStatic
+        private external fun fs_clearerr(fp: Long): Unit
     }
 }
