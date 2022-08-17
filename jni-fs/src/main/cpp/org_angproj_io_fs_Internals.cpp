@@ -124,6 +124,24 @@ static void fs_clearall(JNIEnv * env, jclass thisClass, jlong fp) {
     clearerr((FILE *) fp);
 }
 
+/*
+ * Class:     org_angproj_io_fs_Internals
+ * Method:    fs_fflush
+ * Signature: (J)I
+ */
+static jint fs_fflush(JNIEnv * env, jclass thisClass, jlong fp) {
+    return (jint) fflush((FILE *) fp);
+}
+
+/*
+ * Class:     org_angproj_io_fs_Internals
+ * Method:    fs_fileno
+ * Signature: (J)I
+ */
+static void fs_fileno(JNIEnv * env, jclass thisClass, jlong fp) {
+    return (jint) fileno((FILE *) fp);
+}
+
 static JNINativeMethod funcs[] = {
 	{ "fs_fopen", "(Ljava/lang/String;Ljava/lang/String;)J", (void *)&fs_fopen },
 	{ "fs_fclose", "(J)I", (void *)&fs_fclose },
@@ -134,7 +152,9 @@ static JNINativeMethod funcs[] = {
 	{ "fs_ftruncate", "(JJ)I", (void *)&fs_ftruncate },
 	{ "fs_feof", "(J)I", (void *)&fs_feof },
 	{ "fs_ferror", "(J)I", (void *)&fs_ferror },
-	{ "fs_clearall", "(J)V", (void *)&fs_clearall }
+	{ "fs_clearall", "(J)V", (void *)&fs_clearall },
+	{ "fs_fflush", "(J)I", (void *)&fs_fflush },
+	{ "fs_fileno", "(J)I", (void *)&fs_fileno },
 };
 
 #define CURRENT_JNI JNI_VERSION_1_6

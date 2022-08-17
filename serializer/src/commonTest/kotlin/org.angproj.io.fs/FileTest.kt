@@ -1,95 +1,118 @@
 package org.angproj.io.fs
 
-import org.angproj.io.buf.Buffer
-import org.angproj.io.buf.NativeBuffer
-import org.angproj.io.buf.stream.nativeStreamByteBufferOf
+import org.angproj.io.buf.stream.*
+import org.angproj.io.err.AbstractError
+import org.angproj.io.pipe.IOException
 import org.angproj.io.pipe.Seek
 
 fun open(path: VirtualPath, mode: Mode): FileImpl {
 
 }
 
+fun errorBySizePredicate(size: Int, msg: String, predicate: () -> Int): Int = when (val outcome = predicate()) {
+    size -> throw IOException(AbstractError.error(msg).toString())
+    else -> outcome
+}
+
 class FileImpl internal constructor(val path: Path, val descriptor: Descriptor, val mode: Mode) {
     // https://github.com/python/cpython/blob/main/Lib/_pyio.py
-    protected var _fd = -1
-    protected var _created = false
-    protected var _readable = false
-    protected var _writable = false
-    protected var _appending = false
-    protected var _seekable = false
-    protected var _closefd = true
 
-    fun read(size: Int): NativeBuffer {
-        checkClosed()
-        checkReadable()
+    private var _readable = false
+    val readable: Boolean
+        get() = _readable
 
-        val buffer = nativeStreamByteBufferOf(size)
+    private var _writable = false
+    val writable: Boolean
+        get() = _writable
+
+    private var _seekable = false
+    val seekable: Boolean
+        get() = _seekable
+
+
+    private var _closed: Boolean = false
+    val closed: Boolean
+        get() = _closed
+
+    init {
+        _seekable = try {
+            tell()
+            true
+        } catch (_: IOException) {
+            false
+        }
+    }
+
+    fun read(buffer: ImmutableNativeStreamBuffer, size: Int = buffer.limit) {
+        require(buffer.limit >= size)
+        check(!_closed) { "File descriptor is closed." }
+        check(!_readable) { "File not open for reading." }
+
         val length = Internals.readFile(descriptor, buffer)
         buffer.flip(length)
-        return buffer
+        if(length != size){
+            Internals.errorFile(descriptor)
+            Internals.eofFile(descriptor)
+        }
     }
 
-    fun write(buffer: Buffer): Int {
-        TODO("Not yet implemented")
-    }
+    fun write(buffer: MutableNativeStreamBuffer) {
+        check(!_closed) { "File descriptor is closed." }
+        check(!_writable) { "File not open for writing." }
 
-    val closed: Boolean
-        get() = TODO("Not yet implemented")
+        errorBySizePredicate(buffer.limit, "Failed writing to file") {
+            Internals.writeFile(descriptor, buffer)
+        }
+    }
 
     fun seek(position: Long, whence: Seek) {
-        TODO("Not yet implemented")
+        check(!_closed) { "File descriptor is closed." }
+
+        when(Internals.seekFile(descriptor, position, whence)) {
+            in 1..Long.MAX_VALUE -> throw IOException(AbstractError.error("Failed seek in file").toString())
+            else -> Unit
+        }
     }
 
     fun tell(): Long {
-        TODO("Not yet implemented")
+        check(!_closed) { "File descriptor is closed." }
+
+        return when(val outcome = Internals.tellFile(descriptor)) {
+            -1L -> throw IOException(AbstractError.error("Failed tell position in file").toString())
+            else -> outcome
+        }
     }
 
-    fun truncate(position: Long): Long {
-        TODO("Not yet implemented")
+    fun truncate(position: Long) {
+        check(!_writable) { "File not open for writing." }
+
+        when(Internals.truncateFile(descriptor, position)) {
+            -1 -> throw IOException(AbstractError.error("Failed to truncate file").toString())
+            else -> Unit
+        }
     }
 
     fun flush() {
-        TODO("Not yet implemented")
-    }
+        check(!_closed) { "File descriptor is closed." }
 
-    fun close() {
-        TODO("Not yet implemented")
-    }
-
-    fun isSeekable(): Boolean {
-        return _seekable
-    }
-
-    fun isReadable(): Boolean {
-        return _readable
-    }
-
-    fun isWritable(): Boolean {
-        return _writable
-    }
-
-    fun isInteractive(): Boolean {
-        return false
+        when(Internals.flushFile(descriptor)) {
+            in 1..Long.MAX_VALUE -> throw IOException(AbstractError.error("Failed to flush file").toString())
+            else -> Unit
+        }
     }
 
     fun fileNo(): Int {
-        TODO("Not yet implemented")
+        check(!_closed) { "File descriptor is closed." }
+        return Internals.numberFile(descriptor)
     }
 
-    protected fun checkReadable() {
-        if(!isReadable()) throw UnsupportedOperationException("File not open for reading.")
-    }
-
-    protected fun checkWritable() {
-        if(!isWritable()) throw UnsupportedOperationException("File not open for writing.")
-    }
-
-    protected fun checkSeekable() {
-        if(!isSeekable()) throw UnsupportedOperationException("File or stream is not seekable.")
-    }
-
-    protected fun checkClosed() {
-        if(closed) throw UnsupportedOperationException("File descriptor is closed.")
+    fun close(): Unit = when(_closed) {
+        false -> {
+            flush()
+            Internals.closeFile(descriptor)
+            _closed = true
+        }
+        else -> Unit
     }
 }
 
