@@ -1,13 +1,26 @@
+/**
+ * Copyright (c) 2022 by Kristoffer Paulsson <kristoffer.paulsson@talenten.se>.
+ *
+ * This software is available under the terms of the MIT license. Parts are licensed
+ * under different terms if stated. The legal terms are attached to the LICENSE file
+ * and are made available on:
+ *
+ *      https://opensource.org/licenses/MIT
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Contributors:
+ *      Kristoffer Paulsson - initial implementation
+ */
 package org.angproj.io.fs
 
 import org.angproj.io.buf.stream.*
 import org.angproj.io.err.AbstractError
 import org.angproj.io.pipe.IOException
 import org.angproj.io.pipe.Seek
+import kotlin.test.Test
 
-fun open(path: VirtualPath, mode: Mode): FileImpl {
-
-}
+fun open2(path: VirtualPath, mode: Mode): FileImpl = FileImpl(path, Internals.openFile(path, mode), mode)
 
 fun errorBySizePredicate(size: Int, msg: String, predicate: () -> Int): Int = when (val outcome = predicate()) {
     size -> throw IOException(AbstractError.error(msg).toString())
@@ -50,7 +63,7 @@ class FileImpl internal constructor(val path: Path, val descriptor: Descriptor, 
 
         val length = Internals.readFile(descriptor, buffer)
         buffer.flip(length)
-        if(length != size){
+        if(length != size) {
             Internals.errorFile(descriptor)
             Internals.eofFile(descriptor)
         }
@@ -117,4 +130,10 @@ class FileImpl internal constructor(val path: Path, val descriptor: Descriptor, 
 }
 
 class FileTest {
+
+    @Test
+    fun testFile() {
+        val file = open2(VirtualPath("/tmp/test"), Mode.WRITE_PLUS_BIN)
+        file.close()
+    }
 }

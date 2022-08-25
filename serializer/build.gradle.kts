@@ -42,6 +42,9 @@ kotlin {
         (tasks[processResources] as ProcessResources).apply {
             dependsOn(":jni-serializer:assemble")
             from("${project(":jni-serializer").buildDir}/lib/main/release/stripped")
+
+            dependsOn(":jni-fs:assemble")
+            from("${project(":jni-fs").buildDir}/lib/main/release/stripped")
         }
 
         compilations.all {
@@ -89,7 +92,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.angproj.io.buf:angelos-project-buffer:1.0.1")
-                implementation("org.angproj.io.err:angelos-project-errno:1.0.0")
+                implementation("org.angproj.io.err:angelos-project-errno:1.0.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3")
             }
         }

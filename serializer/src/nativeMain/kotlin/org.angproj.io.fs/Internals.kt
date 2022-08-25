@@ -24,7 +24,7 @@ actual class Internals {
     actual companion object {
         actual inline fun openFile(path: Path, mode: Mode): Descriptor = fopen(
             path.toString(),
-            mode.toString()
+            mode.mode
         ).toLong()
 
         actual inline fun closeFile(filePointer: Descriptor): Int = fclose(filePointer.toCPointer())

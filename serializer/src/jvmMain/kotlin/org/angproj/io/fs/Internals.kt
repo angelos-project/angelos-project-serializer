@@ -20,6 +20,10 @@ import org.angproj.io.pipe.Seek
 
 actual class Internals {
     actual companion object {
+        init {
+            System.loadLibrary("jni-fs") // Load underlying library via JNI.
+        }
+
         actual fun openFile(path: Path, mode: Mode): Descriptor = fs_fopen(path.toString(), mode.mode)
 
         actual fun closeFile(filePointer: Descriptor): Int = fs_fclose(filePointer)
@@ -38,7 +42,7 @@ actual class Internals {
 
         actual fun errorFile(filePointer: Descriptor) = fs_ferror(filePointer)
 
-        actual fun clearErrorFile(filePointer: Descriptor) = fs_clearerr(filePointer)
+        actual fun clearErrorFile(filePointer: Descriptor) = fs_clearall(filePointer)
 
         actual fun flushFile(filePointer: Descriptor): Int = fs_fflush(filePointer)
 
@@ -72,7 +76,7 @@ actual class Internals {
         private external fun fs_ferror(fp: Long): Int
 
         @JvmStatic
-        private external fun fs_clearerr(fp: Long)
+        private external fun fs_clearall(fp: Long)
 
         @JvmStatic
         private external fun fs_fflush(fp: Long): Int

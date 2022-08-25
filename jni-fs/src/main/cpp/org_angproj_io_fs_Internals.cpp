@@ -138,7 +138,7 @@ static jint fs_fflush(JNIEnv * env, jclass thisClass, jlong fp) {
  * Method:    fs_fileno
  * Signature: (J)I
  */
-static void fs_fileno(JNIEnv * env, jclass thisClass, jlong fp) {
+static jint fs_fileno(JNIEnv * env, jclass thisClass, jlong fp) {
     return (jint) fileno((FILE *) fp);
 }
 
